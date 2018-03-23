@@ -57,3 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+animation_library/
+concurrencyWrapper.js
+gadgetDirectives.js
+index.js
