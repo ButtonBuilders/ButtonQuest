@@ -1,5 +1,7 @@
 let votingStateHandlerExporter = require("./votingStateHandler.js");
 let fightStateHandlerExporter = require("./fightStateHandler.js");
+let lootStateHandlerExporter = require("./lootStateHandler.js");
+let character = require("./character.js");
 
 let playerCount = 0;
 let buttonQuestManager = undefined;
@@ -9,11 +11,19 @@ module.exports = {
         playerCount = inGamePlayerCount;
         buttonQuestManager = new ButtonQuestManager(playerCount);
 
+        for(let i = 1; i < playerCount + 1; i++) {
+            character.generateCharacter(i);
+        }
+
         buttonQuestManager.setState("_VOTING_MODE");
 
-        buttonQuestManager.addStateDownHandler("_VOTING_MODE", votingStateHandlerExporter.VotingStateHandler(playerCount));
-        buttonQuestManager.addStateDownHandler("_FIGHT_MODE", fightStateHandlerExporter.FightStateHandler(playerCount));
+        buttonQuestManager.addStateHandler("_VOTING_MODE", votingStateHandlerExporter.VotingStateHandler(playerCount));
+        buttonQuestManager.addStateHandler("_FIGHT_MODE", fightStateHandlerExporter.FightStateHandler(buttonQuestManager, playerCount));
+        buttonQuestManager.addStateHandler("_LOOT_MODE", lootStateHandlerExporter.LootStateHandler(buttonQuestManager, playerCount));
 
+        return buttonQuestManager;
+    },
+    getButtonQuest : function() {
         return buttonQuestManager;
     }
 };
@@ -22,29 +32,25 @@ class ButtonQuestManager {
     constructor(inGamePlayerCount) {
         playerCount = inGamePlayerCount;
         this.state = "_VOTING_MODE"; //_VOTING_MODE, _FIGHT_MODE, _LOOT_MODE
-        this.stateDownHandlers = {};
-        this.stateUpHandlers = {};
+        this.stateHandlers = {};
+        this.partyLoot = [];
     }
 
     //// States ////
-    addStateDownHandler(state, handler) {
-        this.stateDownHandlers[state] = handler;
-    }
-
-    addStateUpHandler(state, handler) {
-        this.stateUpHandlers[state] = handler;
+    addStateHandler(state, handler) {
+        this.stateHandlers[state] = handler;
     }
 
     //// Player Input ////
     playerInputDown(playerID, color) {
-        if (this.stateDownHandlers.hasOwnProperty(this.state)) {
-            return this.stateDownHandlers[this.state].playerInput(playerID, color);
+        if (this.stateHandlers.hasOwnProperty(this.state)) {
+            return this.stateHandlers[this.state].playerInputDown(playerID, color);
         }
     }
 
     playerInputUp(playerID) {
-        if (this.stateUpHandlers.hasOwnProperty(this.state)) {
-            return this.stateUpHandlers[this.state].playerInput(playerID);
+        if (this.stateHandlers.hasOwnProperty(this.state)) {
+            return this.stateHandlers[this.state].playerInputUp(playerID);
         }
     }
 

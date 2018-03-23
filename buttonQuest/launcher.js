@@ -23,3 +23,11 @@ buttonQuest.playerInputDown(1, "blue");
 buttonQuest.playerInputDown(2, "blue");
 buttonQuest.playerInputDown(1, "blue");
 buttonQuest.playerInputDown(4, "blue");
+buttonQuest.playerInputDown(4, "blue");
+buttonQuest.playerInputDown(1, "blue");
+buttonQuest.playerInputDown(2, "blue");
+buttonQuest.playerInputDown(1, "blue");
+buttonQuest.playerInputDown(4, "blue");
+if (buttonQuest.playerInputDown(4, "blue")) { //FINISHING BLOW
+    buttonQuest.playerInputDown(1, "red"); //Grab Sword!
+}

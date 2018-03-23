@@ -12,7 +12,7 @@ class VotingStateHandler {
         this.voting = votingExporter.VotingManager(playerCount);
     }
 
-    playerInput(playerID, color) {
+    playerInputDown(playerID, color) {
         if (color == "blue") {
             if(this.voting.vote(playerID, "a")) {
                 let result = this.voting.getResult("blue", "green");
@@ -27,5 +27,8 @@ class VotingStateHandler {
             }
         }
         return false;
+    }
+
+    playerInputUp(playerID, color) {
     }
 }
