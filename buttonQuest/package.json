@@ -1,0 +1,11 @@
+{
+  "name": "buttonquest",
+  "version": "1.0.0",
+  "description": "Button Builders Bashing Buttons Beautifully",
+  "main": "launcher.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC"
+}
