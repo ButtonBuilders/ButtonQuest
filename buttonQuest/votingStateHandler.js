@@ -13,20 +13,21 @@ class VotingStateHandler {
     }
 
     playerInputDown(playerID, color) {
+        let msg = "Player " + playerID + " voted for " + color + ".";
         if (color == "blue") {
             if(this.voting.vote(playerID, "a")) {
-                let result = this.voting.getResult("blue", "green");
+                let toReturn = this.voting.getResult("blue", "green");
                 this.voting = votingExporter.VotingManager(this.playerCount);
-                return result;
+                return { result : toReturn, newState : "_FIGHT_MODE", message : msg + " The players voted for " + toReturn };
             }
         } else if (color == "green") {
             if(this.voting.vote(playerID, "b")) {
-                let result = this.voting.getResult("blue", "green");
+                let toReturn = this.voting.getResult("blue", "green");
                 this.voting = votingExporter.VotingManager(this.playerCount);
-                return result;
+                return { result : toReturn, newState : "_FIGHT_MODE", message : msg + " The players voted for " + toReturn };
             }
         }
-        return false;
+        return { result : false, message : msg };
     }
 
     playerInputUp(playerID, color) {

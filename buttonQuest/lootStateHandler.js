@@ -18,10 +18,11 @@ class LootStateHandler {
         if (buttonQuest.partyLoot != undefined && buttonQuest.partyLoot != []) {
             let character = characterExporter.getCharacter(playerID);
             character.pickupWeapon(buttonQuest.partyLoot.pop());
-            console.log("Character " + playerID + " picked up the " + character.getWeapon().name);
+            let msg = "Character " + playerID + " picked up the " + character.getWeapon().name + ".";
             if (buttonQuest.partyLoot.length == 0) {
-                buttonQuest.setState("_VOTING_MODE");
+                return { result : true, newState : "_VOTING_MODE", message :  msg + " There is no remaining loot."};
             }
+            return { result : false, message : msg };
         } else {
             throw "PartyLoot should not be empty when this is called";
         }

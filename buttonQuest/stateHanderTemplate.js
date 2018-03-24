@@ -11,6 +11,7 @@ class StateHandlerTemplate {
     }
 
     playerInputDown(playerID, color) {
+        return { result : undefined, message : "" } // newState : "_NEWSTATE_MODE" 
     }
 
     playerInputUp(playerID, color) {
