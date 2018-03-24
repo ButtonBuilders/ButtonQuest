@@ -1,6 +1,7 @@
 let characterExporter = require("./character.js");
 let itemExporter = require("./item.js");
 let bossManagerExporter = require("./bossManager.js");
+let narrator = require("./narrator.js");
 
 let buttonQuest = undefined;
 let fightHandler = undefined;
@@ -71,9 +72,9 @@ class FightStateHandler {
                 if (bossDead) {
                     console.log("Boss has been defeated!");
                     buttonQuest.partyLoot = [ itemExporter.getItem("Sword") ];
-                    return { result : true, newState : "_LOOT_MODE", message : "The Boss has been defeated! The Sword of Exarrg has been dropped." };
+                    return { result : true, newState : "_LOOT_MODE", message : narrator.bossDefeated({name : this.boss.name})};
                 }
-                return { result : false, message : "The boss has lost " + character.getDamage() + " health, with " + this.boss.currentHealth + " health remaining!" };
+                return { result : false, message : narrator.bossHurt({name : this.boss.name}, character.getDamage()};
                 break;
             case attackerStates.boss:
                 let character = characterExporter.getCharacter(playerID);
@@ -87,7 +88,6 @@ class FightStateHandler {
                 }
                 break;
         }
-
     }
 
     playerInputUp(playerID, color) {

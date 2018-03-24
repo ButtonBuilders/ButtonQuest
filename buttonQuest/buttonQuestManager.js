@@ -43,7 +43,7 @@ class ButtonQuestManager {
     //// States ////
     addStateHandler(state, handler) {
         this.stateHandlers[state] = handler;
-    }
+    }   
 
     //// Player Input ////
     playerInputDown(playerID, color) {
