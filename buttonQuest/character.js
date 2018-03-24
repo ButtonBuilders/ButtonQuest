@@ -2,8 +2,8 @@ let characters = {};
 let itemExporter = require("./item.js");
 
 module.exports = {
-    generateCharacter : function(buttonID) {
-        let newCharacter = new Character();
+    generateCharacter : function(buttonID, baseHealth, vitality, agility, magic, strength) {
+        let newCharacter = new Character(baseHealth, vitality, agility, magic, strength);
         newCharacter.pickupWeapon(itemExporter.getItem("Stick"));
         characters[buttonID] = newCharacter;
         return newCharacter;
@@ -14,9 +14,13 @@ module.exports = {
 };
 
 class Character {
-    constructor() {
+    constructor(baseHealth, vitality, agility, magic, strength) {
         this.weapon = undefined;
-        this.health = 100;
+        this.health = baseHealth;
+        this.vitality = vitality; //Health increase
+        this.agility = agility; //Dodge chance
+        this.magic = magic; //Magic
+        this.strength = strength; //Bows + Swords
     }
 
     pickupWeapon(newWeapon) {
@@ -28,6 +32,6 @@ class Character {
     }
 
     getDamage() {
-        return this.weapon.damage;
+        return this.weapon.damage + this.strength;
     }
 }

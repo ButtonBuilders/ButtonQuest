@@ -12,7 +12,7 @@ module.exports = {
         buttonQuestManager = new ButtonQuestManager(playerCount);
 
         for(let i = 1; i < playerCount + 1; i++) {
-            character.generateCharacter(i);
+            character.generateCharacter(i, 100, 1, 1, 1, 1);
         }
 
         buttonQuestManager.setState("_VOTING_MODE");
