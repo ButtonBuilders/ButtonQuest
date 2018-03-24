@@ -2,6 +2,7 @@ let votingStateHandlerExporter = require("./votingStateHandler.js");
 let fightStateHandlerExporter = require("./fightStateHandler.js");
 let lootStateHandlerExporter = require("./lootStateHandler.js");
 let character = require("./character.js");
+let narrator = require("./narrator.js");
 
 let playerCount = 0;
 let buttonQuestManager = undefined;
@@ -16,6 +17,7 @@ module.exports = {
         }
 
         buttonQuestManager.setState("_VOTING_MODE");
+        console.log(narrator.offerVote("option a", "option b"));
 
         buttonQuestManager.addStateHandler("_VOTING_MODE", votingStateHandlerExporter.VotingStateHandler(playerCount));
         buttonQuestManager.addStateHandler("_FIGHT_MODE", fightStateHandlerExporter.FightStateHandler(buttonQuestManager, playerCount));
@@ -48,9 +50,9 @@ class ButtonQuestManager {
         }
     }
 
-    playerInputUp(playerID) {
+    playerInputUp(playerID, color) {
         if (this.stateHandlers.hasOwnProperty(this.state)) {
-            return this.stateHandlers[this.state].playerInputUp(playerID);
+            return this.stateHandlers[this.state].playerInputUp(playerID, color);
         }
     }
 

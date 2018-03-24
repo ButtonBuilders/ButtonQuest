@@ -27,7 +27,7 @@ class FightStateHandler {
         let character = characterExporter.getCharacter(playerID);
         this.bossHealth -= character.getDamage();
         if (this.bossHealth <= 0) {
-            buttonQuest.partyLoot = [ itemExporter.getItem("Sword") ];
+            buttonQuest.partyLoot = [ itemExporter.getItem("Sword"), itemExporter.getItem("Wand") ];
             return { result : true, newState : "_LOOT_MODE", message : narrator.bossDefeated({name : "Toad"})};
         }
         return { result : false, message : narrator.bossHurt({name : "Toad"}, character.getDamage()) };

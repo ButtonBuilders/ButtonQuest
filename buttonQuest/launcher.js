@@ -4,8 +4,6 @@ let prompt = require('prompt');
 
 prompt.start();
 
-console.log("### Launching Button Quest ###");
-
 let keepPlaying = true;
 
 let reprompt = function() {

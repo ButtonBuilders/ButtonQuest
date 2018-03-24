@@ -35,6 +35,9 @@ module.exports = {
     pessimisticWords : function() {
         return "Damn you suck. ";
     },
+    offerVote : function(a, b) {
+        return "Tap when the button is blue to vote for " + a + " and green to vote for " + b;
+    },
     playerVoted : function(playerID, vote) {
         return "Player " + playerID + " voted for " + vote + ". ";
     },
