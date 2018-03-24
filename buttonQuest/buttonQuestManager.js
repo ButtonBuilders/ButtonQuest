@@ -1,18 +1,22 @@
 let votingStateHandlerExporter = require("./votingStateHandler.js");
 let fightStateHandlerExporter = require("./fightStateHandler.js");
 let lootStateHandlerExporter = require("./lootStateHandler.js");
+let gameStateExporter = require("./gameState.js");
 let character = require("./character.js");
 
 let playerCount = 0;
 let buttonQuestManager = undefined;
 
+let gameState = undefined;
+
 module.exports = {
     launchButtonQuest : function(inGamePlayerCount) {
         playerCount = inGamePlayerCount;
         buttonQuestManager = new ButtonQuestManager(playerCount);
+        gameState = gameStateExporter.GameState();
 
         for(let i = 1; i < playerCount + 1; i++) {
-            character.generateCharacter(i, 100, 1, 1, 1, 1);
+            gameState.players.push(character.generateCharacter(i, 100, 1, 1, 1, 1));
         }
 
         buttonQuestManager.setState("_VOTING_MODE");
@@ -56,6 +60,13 @@ class ButtonQuestManager {
 
     //// Modes ////
     setState(newState) {
+        switch(newState)
+        {
+            case "_FIGHT_MODE":
+                let bossTags = "frog";
+                this.stateHandlers[newState.state].loadBoss(bossTags, this.gameState);
+                break;
+        }
         this.state = newState;
     }
 

@@ -1,4 +1,3 @@
-
 let buttonQuest = require("./buttonQuestManager.js").launchButtonQuest(4);
 let prompt = require('prompt');
 
@@ -12,7 +11,7 @@ let reprompt = function() {
     prompt.get(['playerID', 'color'], function (err, promptResult) {
         let playerID = parseInt(promptResult.playerID);
         let color = promptResult.color != undefined ? promptResult.color : "blue";
-        
+
         let state = buttonQuest.getState();
         let actionResults = buttonQuest.playerInputDown(playerID, color); // { result : "green", message: "What she'll say", newState : "_FIGHT_MODE" }
         console.log(actionResults["message"]);
