@@ -1,4 +1,5 @@
 let characterExporter = require("./character.js");
+let narrator = require("./narrator.js");
 
 let buttonQuest = undefined;
 
@@ -18,9 +19,9 @@ class LootStateHandler {
         if (buttonQuest.partyLoot != undefined && buttonQuest.partyLoot != []) {
             let character = characterExporter.getCharacter(playerID);
             character.pickupWeapon(buttonQuest.partyLoot.pop());
-            let msg = "Character " + playerID + " picked up the " + character.getWeapon().name + ".";
+            let msg = narrator.playerPickedUpLoot(playerID, character.getWeapon());
             if (buttonQuest.partyLoot.length == 0) {
-                return { result : true, newState : "_VOTING_MODE", message :  msg + " There is no remaining loot."};
+                return { result : true, newState : "_VOTING_MODE", message :  msg + "There is no remaining loot."};
             }
             return { result : false, message : msg };
         } else {
