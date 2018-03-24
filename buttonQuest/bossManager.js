@@ -10,7 +10,7 @@ class BossManager
 {    
 	constructor(players)
 	{
-		this.bosses;
+		this.bosses = [];
 		this.bosses.push(new Frog(players));
 	}
 
@@ -19,10 +19,10 @@ class BossManager
 		let highestTagCount = 0;
 		let matchingBoss = -1;
 
-		for (let i = 0; i < bosses.length; ++i)
+		for (let i = 0; i < this.bosses.length; ++i)
 		{
 			let tagCount = 0;
-			for (tag in bosses[i].tags)
+			for (let tag in this.bosses[i].tags)
 			{
 				if (metaTags.indexOf(tag) > -1)
 				{
@@ -35,7 +35,7 @@ class BossManager
 				matchingBoss = i;
 			}
 		}
-
+		console.log(matchingBoss);
 		return this.bosses[matchingBoss];
 	}
 }
@@ -44,7 +44,7 @@ class Atttack
 {
 	constructor()
 	{
-		this.attackTime = 0;
+		this.duration = 0;
 		this.delay = 0;
 		this.color = "black";
 		this.damage = 0;
@@ -59,50 +59,44 @@ class Atttack
 	}
 }
 
-class Boss 
-{
-
-}
-
-class Frog extends Boss
+class Frog
 {
 	constructor(players)
 	{
-		this.startingHealth = 100 + (players.length * 15);
+		this.startingHealth = 100 + (players * 15);
 		this.currentHealth = this.startingHealth;
-
-		this.tags = {
-			"frog",
-			"weak",
-			"swamp",
-			"water"
-		}
+		this.name = "Frog Face";
+		this.tags = ["frog", "weak", "swamp", "water"];
 	}
 
-	attack()
+	attack(playerList)
 	{
+		// Simple attack for testing
+		return bubbleAttack(playerList);
+
+
 		if (this.currentHealth >= this.startingHealth / 2)
 		{
-			return attackPhaseOne();
+			return attackPhaseOne(playerList);
 		}
 		else
 		{
-			return attackPhaseOne();
+			return attackPhaseOne(playerList);
 		}
 	}
 
 
-	attackPhaseOne()
+	attackPhaseOne(playerList)
 	{
 		let randomAttack = Math.randint(0, 5);
 
 		if (randomAttack <= 3)
 		{
-			return tongueAttack(3);
+			return tongueAttack(3, playerList);
 		}
 		else
 		{
-			return jumpAttack();
+			return jumpAttack(playerList);
 		}
 	}
 
@@ -112,37 +106,61 @@ class Frog extends Boss
 
 		if (randomAttack == 0)
 		{
-			return tongueAttack(5);
+			return tongueAttack(5, playerList);
 		}
 		else
 		{
-			return jumpAttack();
+			return jumpAttack(playerList);
 		}
 	}
 
-	// Frog hits 3 random players with his tongue slowly,
-	// Then hits 3 random players with his tongue quickly
-	tongueAttack(attacks)
+	bubbleAttack(playerList)
+	{
+		let bubbleAttack = new Atttack();
+		bubbleAttack.duration = 0.5;
+		bubbleAttack.color = "green";
+		bubbleAttack.damage = 10;
+		playerToAttack = Math.randint(1, playerList.length);
+		while (playerToAttack.currentHealth <= 0)
+		{
+			playerToAttack = Math.randint(1, playerList.length);
+		}
+
+		bubbleAttack.players.push(playerToAttack);
+		bubbleAttacks.push(bubbleAttack);
+
+		return bubbleAttacks;
+	}
+
+	// Frog hits a set amount of players with his tongue slowly,
+	// Then hits a set amount players with his tongue quickly
+	tongueAttack(attacks, playerList)
 	{
 		let tongueAttacks = [];
 
 		for (attack in attacks)
 		{
 			let slowAttack = new Atttack();
-			slowAttack.attackTime = 0.5;
+			slowAttack.duration = 0.5;
 			slowAttack.color = "green";
 			slowAttack.damage = 10;
-			slowAttack.players = players[Math.randint(0, players.length)];
+			playerToAttack = Math.randint(1, playerList.length);
+			while (playerToAttack.currentHealth <= 0)
+			{
+				playerToAttack = Math.randint(1, playerList.length);
+			}
+
+			slowAttack.players.push(playerToAttack);
 			tongueAttacks.push(slowAttack);
 		}
 		
 		for (attack in attacks)
 		{
 			let fastAttack = new Attack();
-			fastAttack.attackTime = 0.3;
+			fastAttack.duration = 0.3;
 			fastAttack.color = "green";
 			fastAttack.damage = 10;
-			fastAttack.players = players[Math.randint(0, players.length)];
+			slowAttack.players.push(Math.randint(1, players + 1));
 			tongueAttacks.push(fastAttack);
 		}
 
@@ -155,27 +173,31 @@ class Frog extends Boss
 	jumpAttack()
 	{
 		let jumpAttack = Attack();
-		jumpAttack.attackTime = 3.0;
+		jumpAttack.duration = 3.0;
 		jumpAttack.damage = 30;
-		jumpAttack.players = players;
+		for (i = 0; i < players; ++i)
+		{
+			jumpAttack.players.push(i);
+		}
 		jumpAttack.color = "green";
-		jumpAttack.delay = Math.randint(0, 4);
+		jumpAttack.delay = Math.random(0, 4);
 		jumpAttack.attackType = jumpAttack.attackTypes.PRESS_MULITPLE;
 		jumpAttack.damageReductionPerPress = 1;
 	}
-
 
 	damage(damageTaken)
 	{
 		this.currentHealth -= damageTaken;
 		if (this.currentHealth <= 0)
 		{
-			die();
+			return die();
 		}
+
+		return false;
 	}
 
 	die()
 	{
-
+		return true;
 	}
 }

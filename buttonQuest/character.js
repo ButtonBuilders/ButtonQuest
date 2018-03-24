@@ -16,7 +16,8 @@ module.exports = {
 class Character {
     constructor(baseHealth, vitality, agility, magic, strength) {
         this.weapon = undefined;
-        this.health = baseHealth;
+        this.baseHealth = baseHealth;
+        this.currentHealth = baseHealth + vitality;
         this.vitality = vitality; //Health increase
         this.agility = agility; //Dodge chance
         this.magic = magic; //Magic
@@ -25,6 +26,19 @@ class Character {
 
     pickupWeapon(newWeapon) {
         this.weapon = newWeapon;
+    }
+
+    damage(damageTaken){
+        this.currentHealth -= damageTaken;
+        if (this.currentHealth <= 0){
+            die();
+        }
+        return false;
+    }
+
+    die()
+    {
+        return true;
     }
 
     getWeapon() {
