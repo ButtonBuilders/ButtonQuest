@@ -34,4 +34,12 @@ class VotingStateHandler {
 
     playerInputUp(playerID, color) {
     }
+
+    onStateEnter(oldState, gameState) {
+        
+    }
+
+    onStateExit(newState, gameState) {
+
+    }
 }

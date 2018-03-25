@@ -31,4 +31,12 @@ class LootStateHandler {
 
     playerInputUp(playerID, color) {
     }
+
+    onStateEnter(oldState, gameState) {
+        
+    }
+
+    onStateExit(newState, gameState) {
+
+    }
 }

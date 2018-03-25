@@ -62,13 +62,18 @@ class ButtonQuestManager {
 
     //// Modes ////
     setState(newState) {
-        switch(newState)
-        {
-            case "_FIGHT_MODE":
-                let bossTags = "frog";
-                this.stateHandlers[newState].loadBoss(bossTags, gameState);
-                break;
+        let oldState = this.state;
+
+        let oldStateHandler = this.stateHandlers[oldState];
+        let newStateHandler = this.stateHandlers[newState];
+        
+        if (oldStateHandler != undefined) {
+            oldStateHandler.onStateExit(newState, gameState);
         }
+        if (newStateHandler != undefined) {
+            newStateHandler.onStateEnter(oldState, gameState);
+        }
+
         this.state = newState;
     }
 

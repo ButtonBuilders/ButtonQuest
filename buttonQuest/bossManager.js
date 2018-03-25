@@ -63,7 +63,7 @@ class Frog
 {
 	constructor(players)
 	{
-		this.startingHealth = 1 + (players * 15);
+		this.startingHealth = 100 + (players * 15);
 		this.currentHealth = this.startingHealth;
 		this.name = "Frog Face";
 		this.tags = ["frog", "weak", "swamp", "water"];

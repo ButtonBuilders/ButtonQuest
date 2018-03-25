@@ -36,6 +36,15 @@ class FightStateHandler {
         this.attackThread = setInterval(this.handleBossAttack, 1000, gameState); //Can't use "this" from a setInterval callback
     }
 
+    onStateEnter(oldState, gameState) {
+        let bossTags = "frog";
+        this.loadBoss(bossTags, gameState);
+    }
+
+    onStateExit(newState, gameState) {
+
+    }
+
     handleBossAttack(gameState)
     {
         let alivePlayers = [];
