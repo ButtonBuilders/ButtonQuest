@@ -63,7 +63,7 @@ class Frog
 {
 	constructor(players)
 	{
-		this.startingHealth = 100 + (players * 15);
+		this.startingHealth = 1 + (players * 15);
 		this.currentHealth = this.startingHealth;
 		this.name = "Frog Face";
 		this.tags = ["frog", "weak", "swamp", "water"];
@@ -71,17 +71,22 @@ class Frog
 
 	attack(playerList)
 	{
+		if (playerList.length == 0)
+		{
+			return undefined;
+		}
+
 		// Simple attack for testing
-		return bubbleAttack(playerList);
+		return this.bubbleAttack(playerList);
 
 
 		if (this.currentHealth >= this.startingHealth / 2)
 		{
-			return attackPhaseOne(playerList);
+			return this.attackPhaseOne(playerList);
 		}
 		else
 		{
-			return attackPhaseOne(playerList);
+			return this.attackPhaseOne(playerList);
 		}
 	}
 
@@ -92,11 +97,11 @@ class Frog
 
 		if (randomAttack <= 3)
 		{
-			return tongueAttack(3, playerList);
+			return this.tongueAttack(3, playerList);
 		}
 		else
 		{
-			return jumpAttack(playerList);
+			return this.jumpAttack(playerList);
 		}
 	}
 
@@ -106,11 +111,11 @@ class Frog
 
 		if (randomAttack == 0)
 		{
-			return tongueAttack(5, playerList);
+			return this.tongueAttack(5, playerList);
 		}
 		else
 		{
-			return jumpAttack(playerList);
+			return this.jumpAttack(playerList);
 		}
 	}
 
@@ -120,16 +125,10 @@ class Frog
 		bubbleAttack.duration = 0.5;
 		bubbleAttack.color = "green";
 		bubbleAttack.damage = 10;
-		playerToAttack = Math.randint(1, playerList.length);
-		while (playerToAttack.currentHealth <= 0)
-		{
-			playerToAttack = Math.randint(1, playerList.length);
-		}
+		let playerIndexToAttack = Math.floor(Math.random() * playerList.length); //0 to length
+		bubbleAttack.players.push(playerList[playerIndexToAttack]);
 
-		bubbleAttack.players.push(playerToAttack);
-		bubbleAttacks.push(bubbleAttack);
-
-		return bubbleAttacks;
+		return bubbleAttack;
 	}
 
 	// Frog hits a set amount of players with his tongue slowly,
@@ -144,10 +143,10 @@ class Frog
 			slowAttack.duration = 0.5;
 			slowAttack.color = "green";
 			slowAttack.damage = 10;
-			playerToAttack = Math.randint(1, playerList.length);
+			playerToAttack = Math.floor(Math.random() * playerList.length + 1); //1 to length
 			while (playerToAttack.currentHealth <= 0)
 			{
-				playerToAttack = Math.randint(1, playerList.length);
+				playerToAttack = Math.floor(Math.random() * playerList.length + 1); //1 to length
 			}
 
 			slowAttack.players.push(playerToAttack);
@@ -160,7 +159,7 @@ class Frog
 			fastAttack.duration = 0.3;
 			fastAttack.color = "green";
 			fastAttack.damage = 10;
-			slowAttack.players.push(Math.randint(1, players + 1));
+			slowAttack.players.push(Math.floor(Math.random() * players + 2)); //1 to players+1);
 			tongueAttacks.push(fastAttack);
 		}
 
@@ -172,7 +171,7 @@ class Frog
 	// They take 30 - 1 damage for each time they press the button in the 3 seconds.
 	jumpAttack()
 	{
-		let jumpAttack = Attack();
+		let jumpAttack = new Attack();
 		jumpAttack.duration = 3.0;
 		jumpAttack.damage = 30;
 		for (i = 0; i < players; ++i)
@@ -180,7 +179,7 @@ class Frog
 			jumpAttack.players.push(i);
 		}
 		jumpAttack.color = "green";
-		jumpAttack.delay = Math.random(0, 4);
+		jumpAttack.delay = Math.floor(Math.random() * 5); //0 to 4
 		jumpAttack.attackType = jumpAttack.attackTypes.PRESS_MULITPLE;
 		jumpAttack.damageReductionPerPress = 1;
 	}
@@ -190,7 +189,7 @@ class Frog
 		this.currentHealth -= damageTaken;
 		if (this.currentHealth <= 0)
 		{
-			return die();
+			return this.die();
 		}
 
 		return false;

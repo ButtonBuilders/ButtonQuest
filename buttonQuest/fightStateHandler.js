@@ -26,42 +26,68 @@ class FightStateHandler {
             boss : 2,
         };
         this.currentAttackers = this.attackerStates.players;
+        this.attackThread = undefined;
     }
 
     loadBoss(bossTags, gameState)
     {
         this.boss = this.bossManager.getBoss(bossTags);
-        console.log("BOSS ");
-        console.log(this.boss);
         // Have the boss attack the party every 7 seconds
-        setInterval(this.handleBossAttack, 7000);
+        this.attackThread = setInterval(this.handleBossAttack, 1000, gameState); //Can't use "this" from a setInterval callback
     }
 
-    handleBossAttack()
+    handleBossAttack(gameState)
     {
-        let attack = this.boss.attack(gameState.players);
-        setTimeout(this.bossAttackStart, attack.delay);
-        this.ongoingAttack = attack.players;
-        this.currentAttackers = boss;
-    }
-
-    bossAttackStart()
-    {
-        for (player in this.ongoingAttack.players)
+        let alivePlayers = [];
+        for (let i = 0; i < gameState.players.length; i++)
         {
+            if (gameState.players[i].currentHealth > 0)
+            {
+                alivePlayers.push(gameState.players[i].characterID);
+            }
+        }
+        let attack = fightHandler.boss.attack(alivePlayers); 
+        if (attack != undefined) {
+            setTimeout(fightHandler.bossAttackStart, attack.delay, attack);
+            fightHandler.ongoingAttack = attack;
+            fightHandler.currentAttackers = fightHandler.attackerStates.boss;
+        } else {
+            clearInterval(fightHandler.attackThread);
+            console.log("Every player has died.");
+        }
+    }
+
+    bossAttackStart(attack)
+    {
+        for (let playerID in fightHandler.ongoingAttack.players)
+        {
+            let player = characterExporter.getCharacter(playerID);
             // Change colours!
         }
-        setTimeout(this.bossAttackEnd, attack.duration);
+        setTimeout(fightHandler.bossAttackEnd, attack.duration);
     }
 
     bossAttackEnd()
     {
-        for (player in this.ongoingAttack.players)
+        let toDelete = [];
+        for (let i = 0; i < fightHandler.ongoingAttack.players.length; i++)
         {
-            player.damage(this.ongoingAttack.damage);
+            let playerID = fightHandler.ongoingAttack.players[i];
+            let player = characterExporter.getCharacter(playerID);
+            if (player.damage(fightHandler.ongoingAttack.damage)) {
+                toDelete.push(i);
+                fightHandler.ongoingAttack.players[i] = undefined;
+            }
+            console.log("Player " + playerID + " took " + fightHandler.ongoingAttack.damage + " damage and has " + player.currentHealth + " hp remaining.");
         }
-
-        this.currentAttackers = players;
+        for(let i = 0; i < toDelete.length; i++) {
+            fightHandler.ongoingAttack.players.splice(i, 1);
+        }
+        if (fightHandler.ongoingAttack.players.length == 0) {
+            //Stop this interval.
+            //console.log("Everyone is dead, plz stop");
+        }
+        fightHandler.currentAttackers = fightHandler.attackerStates.players;
     }
 
     playerInputDown(playerID, color) {
@@ -71,6 +97,7 @@ class FightStateHandler {
             case this.attackerStates.players:
                 let bossDead = this.boss.damage(character.getDamage());
                 if (bossDead) {
+                    clearInterval(this.attackThread);
                     console.log("Boss has been defeated!");
                     buttonQuest.partyLoot = [ itemExporter.getItem("Sword") ];
                     return { result : true, newState : "_LOOT_MODE", message : narrator.bossDefeated(this.boss)};
